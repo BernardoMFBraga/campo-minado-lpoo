@@ -15,36 +15,32 @@ public class Tabuleiro {
         
         iniciaTabuleiro();
 	}
-	 public void iniciaTabuleiro() {
-	        System.out.println();
+	public void iniciaTabuleiro() {
+        preencherMatriz(tela, "#");
+        preencherMatriz(jogoReal, " ");
+        distribuirBombas();
+        menuJogo();
+    }
 
-	        //Loop que setta a matriz 'tela' com '#'.
-	        for (int i = 0; i < tela.length; i++) {
-	            for (int j = 0; j < tela[0].length; j++) {
-	                tela[i][j] = new Quadrado();
-	                tela[i][j].setValor("#");
-	            }
-	        }
-	        //Loop que setta a matriz 'jogo real' com ' '.
-	        for (int i = 0; i < tela.length; i++) {
-	            for (int j = 0; j < jogoReal[0].length; j++) {
-	                jogoReal[i][j] = new Quadrado();
-	                jogoReal[i][j].setValor(" ");
-	            }
-	        }
+    private void preencherMatriz(Quadrado[][] matriz, String valorPadrao) {
+        for (int i = 0; i < matriz.length; i++) {
+            for (int j = 0; j < matriz[0].length; j++) {
+                matriz[i][j] = new Quadrado();
+                matriz[i][j].setValor(valorPadrao);
+            }
+        }
+    }
 
-	        //Loop que setta na matriz 'jogo real' as bombas em posições aleatórias.
-	        for (int i = 0; i < numeroBombas; i++) {
-	            final int x = (int) (jogoReal.length * Math.random());
-	            final int y = (int) (jogoReal[0].length * Math.random());
+    private void distribuirBombas() {
+        for (int i = 0; i < numeroBombas; i++) {
+            int x = (int) (jogoReal.length * Math.random());
+            int y = (int) (jogoReal[0].length * Math.random());
 
-	            if (!jogoReal[x][y].getValor().equals("*")) {
-	                jogoReal[x][y].setValor("*");
-	            }
-	        }
-
-	        menuJogo();
-	    }
+            if (!jogoReal[x][y].getValor().equals("*")) {
+                jogoReal[x][y].setValor("*");
+            }
+        }
+    }
 	 
 	 public void mostraJogo() {
 	        System.out.print("     ");
@@ -254,39 +250,98 @@ public class Tabuleiro {
 	        tela[linha][coluna].setValidado(true);
 	        jogoReal[linha][coluna].setValor(String.valueOf(bombas));
 	        jogoReal[linha][coluna].setValidado(true);
-	    }  
+	    }
+	    public void marcaCelula(int linha, int coluna) {
+	        if (!tela[linha][coluna].getValidado()) {
+	            tela[linha][coluna].setValor("F"); // Marcando a célula com bandeira
+	        } else {
+	            System.out.println("Essa célula já foi aberta. Não é possível marcar com bandeira.");
+	        }
+	    }
+
+	    public void removeMarca(int linha, int coluna) {
+	        if (tela[linha][coluna].getValor().equals("F")) {
+	            tela[linha][coluna].setValor("#"); // Removendo a bandeira, restaurando o valor original
+	        } else {
+	            System.out.println("Essa célula não está marcada com bandeira.");
+	        }
+	    }
+
+	    public boolean celulaMarcadaComBandeira(int linha, int coluna) {
+	        return tela[linha][coluna].getValor().equals("F");
+	    }
+	    public void abrirCelula(int linha, int coluna) {
+	        if (celulaMarcadaComBandeira(linha, coluna)) {
+	            System.out.println("Remova a bandeira antes de abrir essa célula.");
+	        } else {
+	            // Aqui você colocaria a lógica para abrir a célula, por exemplo:
+	            if (!jogoReal[linha][coluna].getValidado()) {
+	                if (jogoReal[linha][coluna].getValor().equals("*")) {
+	                    vocePerdeu();
+	                } else {
+	                    verificarBombas(linha, coluna);
+	                    if (ganhou == (jogoReal.length * jogoReal[0].length - numeroBombas)) {
+	                        voceGanhou();
+	                    }
+	                }
+	            } else {
+	                System.out.println("Essa célula já foi aberta.");
+	            }
+	        }
+	    }
+
 	 
-	 public void menuJogo() {
-		 try {
-		        int linha = 0;
-		        int coluna = 0;
-		        int i = -1;
-		        while (i != 0) {
-		            mostraJogo();
-		            System.out.println("\n-------------------------");
+	    public void menuJogo() {
+	        try {
+	            int linha = 0;
+	            int coluna = 0;
+	            int i = -1;
 
-		            linha = menuLinha();
-		            coluna = menuColuna();
+	            while (i != 0) {
+	                mostraJogo();
+	                System.out.println("\n(1) Abrir célula / (2) Marcar com bandeira / (3) Remover bandeira");
+	                int opcao = Integer.parseInt(teclado.nextLine());
 
-		            final boolean validado = validaCampos(linha, coluna);
+	                switch (opcao) {
+	                    case 1:
+	                        linha = menuLinha();
+	                        coluna = menuColuna();
+	                        final boolean validado = validaCampos(linha, coluna);
+	                        if (validado && !jogoReal[linha][coluna].getValidado()) {
+	                            abrirCelula(linha, coluna);
+	                            if (jogoReal[linha][coluna].getValor().equals("*")) {
+	                                vocePerdeu();
+	                                i = 0;
+	                            } else {
+	                                verificarBombas(linha, coluna);
+	                                if (ganhou == (jogoReal.length * jogoReal[0].length - numeroBombas)) {
+	                                    voceGanhou();
+	                                    i = 0;
+	                                }
+	                            }
+	                        } else {
+	                            System.out.println("Coordenada inválida ou já utilizada.");
+	                        }
+	                        break;
+	                    case 2:
+	                        linha = menuLinha();
+	                        coluna = menuColuna();
+	                        marcaCelula(linha, coluna);
+	                        break;
+	                    case 3:
+	                        linha = menuLinha();
+	                        coluna = menuColuna();
+	                        removeMarca(linha, coluna);
+	                        break;
+	                    default:
+	                        System.out.println("Opção inválida.");
+	                        break;
+	                }
+	            }
+	        } finally {
+	            teclado.close();
+	        }
+	    }
 
-		            if (validado) {
-		                if (jogoReal[linha][coluna].getValor().equals("*")) {
-		                    vocePerdeu();
-		                    i = 0;
-		                } else {
-		                    verificarBombas(linha, coluna);
-		                    if (ganhou == (jogoReal.length * jogoReal[0].length - numeroBombas)) {
-		                        voceGanhou();
-		                        i = 0;
-		                    }
-		                }
-		            } else {
-		                System.out.println("Tente mais uma vez\n");
-		            }
-		        }
-		    } finally {
-		        teclado.close();
-		    }
-		}
+
 }
