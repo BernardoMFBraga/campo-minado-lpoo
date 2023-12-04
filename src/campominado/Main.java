@@ -1,4 +1,4 @@
-
+package campominado;
 
 public class Main {
 
@@ -6,7 +6,7 @@ public class Main {
 		System.out.println("Bem-vindo ao Campo Minado!");
 
         // Crie um objeto Tabuleiro
-        Tabuleiro tabuleiro = new Tabuleiro();
+		Tabuleiro tabuleiro = new Tabuleiro();
 
         // Chame o método menuJogo para iniciar o jogo
         tabuleiro.menuJogo();
