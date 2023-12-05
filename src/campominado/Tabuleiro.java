@@ -19,20 +19,25 @@ public class Tabuleiro {
         iniciaTabuleiro();
     }
 
+    private void preencherMatriz(Celula[][] matriz) {
+        for (int i = 0; i < matriz.length; i++) {
+            for (int j = 0; j < matriz[0].length; j++) {
+                if (matriz[i][j] == null) {
+                    matriz[i][j] = new EspacoVazio();
+                } else {
+                    matriz[i][j] = matriz[i][j].criarCopia();
+                }
+            }
+        }
+    }
+
     public void iniciaTabuleiro() {
-        preencherMatriz(tela, new EspacoVazio());
-        preencherMatriz(jogoReal, new Celula());
+        preencherMatriz(tela);
+        preencherMatriz(jogoReal);
         distribuirBombas();
         menuJogo();
     }
 
-    private void preencherMatriz(Celula[][] matriz, Celula valorPadrao) {
-        for (int i = 0; i < matriz.length; i++) {
-            for (int j = 0; j < matriz[0].length; j++) {
-                matriz[i][j] = valorPadrao.criarCopia(); // Usando o método criarCopia
-            }
-        }
-    }
 
     private void distribuirBombas() {
         for (int i = 0; i < numeroBombas; i++) {
@@ -69,7 +74,16 @@ public class Tabuleiro {
             }
             // Loop que preenche a matriz para o usuário com '#'.
             for (int j = 0; j < tela[0].length; j++) {
-                System.out.print(tela[i][j].getValor() + "   ");
+                // Modificação para ocultar os caracteres '#' quando uma célula é aberta ou marcada
+                if (tela[i][j].getValidado()) {
+                    if (tela[i][j].getValor().equals("F")) {
+                        System.out.print("F # ");
+                    } else {
+                        System.out.print(tela[i][j].getValor() + " # ");
+                    }
+                } else {
+                    System.out.print("# # ");
+                }
             }
             System.out.println();
         }
@@ -144,36 +158,18 @@ public class Tabuleiro {
         }
 
         int bombas = 0;
-        int minLinha;
-        int maxLinha;
-        int minColuna;
-        int maxColuna;
-
-        if (linha != 0 && linha != jogoReal.length - 1) {
-            minLinha = linha - 1;
-            maxLinha = linha + 1;
-        } else if (linha == 0) {
-            minLinha = linha;
-            maxLinha = linha + 1;
-        } else {
-            minLinha = linha - 1;
-            maxLinha = linha;
-        }
-
-        if (coluna != 0 && coluna != jogoReal[0].length - 1) {
-            minColuna = coluna - 1;
-            maxColuna = coluna + 1;
-        } else if (coluna == 0) {
-            minColuna = coluna;
-            maxColuna = coluna + 1;
-        } else {
-            minColuna = coluna - 1;
-            maxColuna = coluna;
-        }
+        int minLinha = Math.max(0, linha - 1);
+        int maxLinha = Math.min(jogoReal.length - 1, linha + 1);
+        int minColuna = Math.max(0, coluna - 1);
+        int maxColuna = Math.min(jogoReal[0].length - 1, coluna + 1);
 
         for (int i = minLinha; i <= maxLinha; i++) {
             for (int j = minColuna; j <= maxColuna; j++) {
-                if (jogoReal[i][j].getValor().equals("*")) {
+                if (i == linha && j == coluna) {
+                    continue;
+                }
+
+                if (jogoReal[i][j].isBomba()) {
                     bombas++;
                 }
             }
@@ -267,10 +263,10 @@ public class Tabuleiro {
     }
 
     public void removeMarca(int linha, int coluna) {
-        if (tela[linha][coluna].getValor().equals("F")) {
+        if (!tela[linha][coluna].getValidado() && tela[linha][coluna] instanceof EspacoVazio) {
             tela[linha][coluna].setValor("#"); // Removendo a bandeira, restaurando o valor original
         } else {
-            System.out.println("Essa célula não está marcada com bandeira.");
+            System.out.println("Essa célula não está marcada com bandeira ou já foi aberta.");
         }
     }
 
@@ -282,48 +278,45 @@ public class Tabuleiro {
         if (celulaMarcadaComBandeira(linha, coluna)) {
             System.out.println("Remova a bandeira antes de abrir essa célula.");
         } else {
-            // Aqui você colocaria a lógica para abrir a célula, por exemplo:
             if (!jogoReal[linha][coluna].getValidado()) {
-            	if (!jogoReal[linha][coluna].getValidado()) {
-            	    String valorCelula = jogoReal[linha][coluna].getValor();
-            	    if (valorCelula != null && valorCelula.equals("*")) {
-            	        vocePerdeu();
-            	    } else {
-            	        verificarBombas(linha, coluna);
-            	        if (ganhou == (jogoReal.length * jogoReal[0].length - numeroBombas)) {
-            	            voceGanhou();
-            	        }
-            	    }
-            	} else {
-            	    System.out.println("Essa célula já foi aberta.");
-            	}
+                Celula celulaAtual = jogoReal[linha][coluna];
+                if (celulaAtual.getValor().equals("*")) {
+                    vocePerdeu();
+                } else {
+                    verificarBombas(linha, coluna);
+                    if (ganhou == (jogoReal.length * jogoReal[0].length - numeroBombas)) {
+                        voceGanhou();
+                    }
+                }
+            } else {
+                System.out.println("Essa célula já foi aberta.");
+            }
         }
-       }
-   }
+    }
 
     public void menuJogo() {
         try {
-            int linha = 0;
-            int coluna = 0;
             int i = -1;
 
             while (i != 0) {
                 mostraJogo();
-                System.out.println("\n(1) Abrir célula / (2) Marcar com bandeira / (3) Remover bandeira");
+                System.out.println("\n(1) Abrir célula / (2) Marcar com bandeira / (3) Remover bandeira / (0) Sair");
                 int opcao = Integer.parseInt(teclado.nextLine());
 
                 switch (opcao) {
                     case 1:
-                        linha = menuLinha();
-                        coluna = menuColuna();
-                        final boolean validado = validaCampos(linha, coluna);
-                        if (validado && !jogoReal[linha][coluna].getValidado()) {
+                        int linha = menuLinha();
+                        int coluna = menuColuna();
+
+                        if (validaCampos(linha, coluna)) {
                             abrirCelula(linha, coluna);
+
                             if (jogoReal[linha][coluna].getValor().equals("*")) {
                                 vocePerdeu();
                                 i = 0;
                             } else {
                                 verificarBombas(linha, coluna);
+
                                 if (ganhou == (jogoReal.length * jogoReal[0].length - numeroBombas)) {
                                     voceGanhou();
                                     i = 0;
@@ -343,13 +336,17 @@ public class Tabuleiro {
                         coluna = menuColuna();
                         removeMarca(linha, coluna);
                         break;
+                    case 0:
+                        System.out.println("Saindo do jogo. Obrigado por jogar!");
+                        i = 0; // Adicionado para corrigir o loop infinito
+                        break;
                     default:
                         System.out.println("Opção inválida.");
                         break;
                 }
             }
-        } finally {
-            teclado.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
