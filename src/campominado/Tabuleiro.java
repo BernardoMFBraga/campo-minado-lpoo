@@ -52,7 +52,7 @@ public class Tabuleiro {
 	                System.out.print(i + "  ");
 	            }
 	        }
-	        System.out.println("\n   ---------------------------------------------------------------------------------------------");
+	        System.out.println("\n   ---------------------------------------------");
 	        //Loop para colocar os números da coordenada y no canto esquerdo da matriz.
 	        for (int i = 0; i < tela.length; i++) {
 	            if (i < 10) {
