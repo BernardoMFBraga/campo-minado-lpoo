@@ -1,4 +1,4 @@
-
+package campominado;
 
 public class Main {
 
@@ -10,9 +10,6 @@ public class Main {
 
         // Chame o método menuJogo para iniciar o jogo
         tabuleiro.menuJogo();
-
-       
-
 	}
 
 }
