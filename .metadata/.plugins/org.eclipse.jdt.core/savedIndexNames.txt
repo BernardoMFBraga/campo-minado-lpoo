@@ -1,4 +1,0 @@
-INDEX VERSION 1.134+C:\Users\giuli\OneDrive\Área de Trabalho\campo-minado-lpoo\.metadata\.plugins\org.eclipse.jdt.core
-1865797976.index
-2802679567.index
-1151793257.index
