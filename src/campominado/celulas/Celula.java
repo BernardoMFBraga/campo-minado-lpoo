@@ -1,4 +1,6 @@
-package campominado;
+package celulas;
+
+import tabuleiros.Tabuleiro;
 
 public class Celula {
     protected String valor; // Valor da célula ('*', '0', '#', etc.)
@@ -38,6 +40,7 @@ public class Celula {
         this.validado = validado;
     }
 
+   
     // Método para ação ao abrir a célula
     public void acaoAoAbrir(Tabuleiro tabuleiro, int linha, int coluna) {
         // Lógica padrão ao abrir uma célula

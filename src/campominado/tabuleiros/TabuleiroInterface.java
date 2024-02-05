@@ -1,4 +1,6 @@
-package campominado;
+package tabuleiros;
+
+import celulas.Celula;
 
 public interface TabuleiroInterface {
     void iniciaTabuleiro();

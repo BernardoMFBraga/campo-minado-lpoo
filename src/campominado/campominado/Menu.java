@@ -1,6 +1,10 @@
 package campominado;
 
 import javax.swing.*;
+
+import tabuleiros.Tabuleiro;
+import tabuleiros.TabuleiroInterface;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

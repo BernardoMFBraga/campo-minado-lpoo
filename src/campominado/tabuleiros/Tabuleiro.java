@@ -1,4 +1,4 @@
-package campominado;
+package tabuleiros;
 
 import java.awt.Color;
 import java.awt.GridLayout;
@@ -8,15 +8,22 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
+import celulas.Bomba;
+import celulas.Celula;
+import exceptions.CelulaComBandeiraException;
+
 public class Tabuleiro implements TabuleiroInterface {
     int linhas;
     int colunas;
     int numeroBombas;
     JFrame frame;
     JButton[][] botoes;
-    Celula[][] jogoReal;
+    public Celula[][] jogoReal;
     int dificuldade;
     boolean gameOver;
+    int jogadorAtual = 1;
+    boolean jogoEmAndamento=true;
+
 
     public Tabuleiro(int dificuldade) {
         int largura;
@@ -83,9 +90,16 @@ public class Tabuleiro implements TabuleiroInterface {
                                 throw new CelulaComBandeiraException("Não é possível abrir uma célula marcada com bandeira.");
                             } else if (jogoReal[linha][coluna] instanceof Bomba) {
                                 abrirCampo();
+                                if (jogadorAtual == 1) {
+                                    System.out.println("Jogador 2 ganhou!");
+                                } else {
+                                    System.out.println("Jogador 1 ganhou!");
+                                }
+                                jogoEmAndamento = false;
                             } else {
                                 verificarBombas(linha, coluna);
                             }
+                            alternarJogador();
                         }
                         // Verificar se foi um clique do botão direito
                         else if (SwingUtilities.isRightMouseButton(e)) {
@@ -110,7 +124,14 @@ public class Tabuleiro implements TabuleiroInterface {
 	public void iniciaTabuleiro() {
         preencherMatriz(jogoReal, " ");
         distribuirBombas();
+        System.out.println("Começa o Jogador 1");
     }
+	private void alternarJogador() {
+	    jogadorAtual = (jogadorAtual == 1) ? 2 : 1;
+	    if (jogoEmAndamento) {
+	        System.out.println("Próxima jogada: Jogador " + jogadorAtual);
+	    }
+	}
 
     public void preencherMatriz(Celula[][] matriz, String valorPadrao) {
         for (int i = 0; i < matriz.length; i++) {

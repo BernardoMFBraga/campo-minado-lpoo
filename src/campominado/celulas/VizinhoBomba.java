@@ -1,5 +1,7 @@
-package campominado;
+package celulas;
 
+import tabuleiros.Tabuleiro;
+//com a interface gráfica, não estamos utilizando diretamente essas classes que herdam de celula
 public class VizinhoBomba extends Celula {
     public VizinhoBomba() {
         super();
