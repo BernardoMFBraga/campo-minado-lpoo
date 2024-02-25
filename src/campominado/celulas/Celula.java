@@ -6,6 +6,7 @@ public class Celula {
     protected String valor; // Valor da célula ('*', '0', '#', etc.)
     protected boolean validado; // Indica se a célula foi revelada ou não
     protected boolean temBandeira;
+    
     // Construtor da classe
     public Celula() {
         this.validado = false; // Por padrão, a célula não está validada (não revelada)
