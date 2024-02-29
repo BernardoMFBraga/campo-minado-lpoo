@@ -1,4 +1,4 @@
-package campominado;
+package sistema;
 
 import javax.swing.*;
 import ranking_jogador.Jogador;

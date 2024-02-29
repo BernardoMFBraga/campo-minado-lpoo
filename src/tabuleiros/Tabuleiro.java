@@ -1,14 +1,16 @@
 package tabuleiros;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
-import campominado.FimDeJogo;
+import sistema.FimDeJogo;
 import celulas.Bomba;
 import celulas.Celula;
 import exceptions.CelulaComBandeiraException;
@@ -26,7 +28,6 @@ public class Tabuleiro implements TabuleiroInterface {
     int jogadorAtual = 1;
     boolean jogoEmAndamento=true;
     private Jogador jogador;
-
 
     public Tabuleiro(int dificuldade, Jogador jogador) {
         int largura;
@@ -65,6 +66,7 @@ public class Tabuleiro implements TabuleiroInterface {
                 break;
         }
 
+        	
         frame = new JFrame("Campo Minado");
         frame.setVisible(true);
         frame.setSize(largura, altura);
@@ -124,7 +126,24 @@ public class Tabuleiro implements TabuleiroInterface {
             
         }
         iniciaTabuleiro();
+        centralizarJanela();
     }
+    
+    private void centralizarJanela() {
+        // Obtém o tamanho da tela
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+
+        // Calcula a posição para centralizar a janela
+        int x = (screenSize.width - frame.getWidth()) / 2;
+        int y = (screenSize.height - frame.getHeight()) / 2;
+
+        // Define a posição da janela
+        frame.setLocation(x, y);
+    }
+    
+	public Tabuleiro(int i) {
+		
+	}
 	public void iniciaTabuleiro() {
         preencherMatriz(jogoReal, " ");
         distribuirBombas();

@@ -1,4 +1,4 @@
-package campominado;
+package sistema;
 
 import ranking_jogador.Jogador;
 import ranking_jogador.Ranking;

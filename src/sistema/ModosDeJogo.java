@@ -1,6 +1,7 @@
-package campominado;
+package sistema;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 
 import ranking_jogador.Jogador;
 import tabuleiros.Tabuleiro;
@@ -22,19 +23,48 @@ public class ModosDeJogo {
         
         this.jogador = jogador;
         
+        frameModosDeJogo.setBounds(100, 100, 300, 200);
+        frameModosDeJogo.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frameModosDeJogo.getContentPane().setLayout(new BorderLayout());
+        
+        // Calcula o tamanho da tela
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+
+        // Define o tamanho da janela (largura x altura) como 400x300
+        frameModosDeJogo.setSize(600, 500);
+
+        // Calcula a posição para centralizar a janela na tela
+        int x = (screenSize.width - frameModosDeJogo.getWidth()) / 2;
+        int y = (screenSize.height - frameModosDeJogo.getHeight()) / 2;
+
+        // Define a posição da janela
+        frameModosDeJogo.setLocation(x, y);
+
+        // Define o layout da janela
+        frameModosDeJogo.getContentPane().setLayout(new BorderLayout());
+        
         // Título "Dificuldade"
         JLabel lblDificuldade = new JLabel("Dificuldade");
-        lblDificuldade.setFont(new Font("Yu Gothic UI Semibold", Font.BOLD, 16));
+        lblDificuldade.setFont(new Font("Courier New", Font.BOLD, 64));
+        lblDificuldade.setBackground(Color.DARK_GRAY); 
+        lblDificuldade.setForeground(Color.GREEN);
+        Border border = BorderFactory.createLineBorder(Color.BLACK, 12);
+        lblDificuldade.setBorder(border);
+        lblDificuldade.setOpaque(true); // Definindo opacidade do fundo como verdadeiro
+        frameModosDeJogo.getContentPane().add(lblDificuldade, BorderLayout.NORTH);
         lblDificuldade.setHorizontalAlignment(SwingConstants.CENTER);
         frameModosDeJogo.getContentPane().add(lblDificuldade, BorderLayout.NORTH);
 
         // Painel para os botões de dificuldade
         JPanel panelDificuldade = new JPanel();
         frameModosDeJogo.getContentPane().add(panelDificuldade, BorderLayout.CENTER);
-        panelDificuldade.setLayout(new GridLayout(3, 1, 0, 10)); // 3 linhas, 1 coluna, espaçamento vertical de 10
+        panelDificuldade.setLayout(new GridLayout(3, 1, 0, 0)); // 3 linhas, 1 coluna, espaçamento vertical de 10
 
         // Botão para o modo Fácil
         JButton btnFacil = new JButton("Fácil");
+        btnFacil.setFont(new Font("Courier New", Font.ITALIC, 40));
+        btnFacil.setForeground(Color.GREEN);
+        btnFacil.setBackground(Color.DARK_GRAY); 
         btnFacil.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 iniciarJogo(ModoJogo.FACIL); // Inicia o jogo no modo Fácil
@@ -44,6 +74,9 @@ public class ModosDeJogo {
 
         // Botão para o modo Médio
         JButton btnMedio = new JButton("Médio");
+        btnMedio.setFont(new Font("Courier New", Font.ITALIC, 40));
+        btnMedio.setForeground(Color.GREEN);
+        btnMedio.setBackground(Color.DARK_GRAY);
         btnMedio.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 iniciarJogo(ModoJogo.MEDIO); // Inicia o jogo no modo Médio
@@ -53,6 +86,9 @@ public class ModosDeJogo {
 
         // Botão para o modo Difícil
         JButton btnDificil = new JButton("Difícil");
+        btnDificil.setFont(new Font("Courier New", Font.ITALIC, 40));
+        btnDificil.setForeground(Color.GREEN);
+        btnDificil.setBackground(Color.DARK_GRAY);
         btnDificil.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 iniciarJogo(ModoJogo.DIFICIL); // Inicia o jogo no modo Difícil
