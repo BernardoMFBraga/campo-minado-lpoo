@@ -8,9 +8,11 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
+import campominado.FimDeJogo;
 import celulas.Bomba;
 import celulas.Celula;
 import exceptions.CelulaComBandeiraException;
+import ranking_jogador.Jogador;
 
 public class Tabuleiro implements TabuleiroInterface {
     int linhas;
@@ -23,13 +25,15 @@ public class Tabuleiro implements TabuleiroInterface {
     boolean gameOver;
     int jogadorAtual = 1;
     boolean jogoEmAndamento=true;
+    private Jogador jogador;
 
 
-    public Tabuleiro(int dificuldade) {
+    public Tabuleiro(int dificuldade, Jogador jogador) {
         int largura;
         int altura;
         this.dificuldade = dificuldade;
         this.gameOver = false;
+        this.jogador = jogador;
 
         switch (dificuldade) {
             case 1:
@@ -229,17 +233,38 @@ public class Tabuleiro implements TabuleiroInterface {
 	    }
 	    private void abrirCampo() {
 	        gameOver = true;
+	        
 	    	for (int x = 0; x < botoes.length; x++) {
 	            for (int y = 0; y < botoes[0].length; y++) {
 	                if (jogoReal[x][y].getValor().equals("*")) {
 	                    botoes[x][y].setBackground(Color.red);
-	                    //botoes[x][y].setIcon(new ImageIcon("images/mina-jogo.png"));
+	                    
 	                } else {
 	                    botoes[x][y].setEnabled(false);
 	                }
 
 	            }
 	        }
+	    	int pontuacao = calcularPontuacao();
+	        JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(frame);
+	        FimDeJogo fimDeJogo = new FimDeJogo(parentFrame, pontuacao,this.jogador);
 	        }
+	    public int calcularPontuacao() {
+	        int pontuacao = 0;
+	        int celulasAbertas = 0;
+
+	        for (int i = 0; i < jogoReal.length; i++) {
+	            for (int j = 0; j < jogoReal[0].length; j++) {
+	                // Verifique se a célula foi validada (aberta)
+	                if (jogoReal[i][j].getValidado()) {
+	                    celulasAbertas++;
+	                }
+	            }
+	        }
+
+	        pontuacao = celulasAbertas * 10;
+
+	        return pontuacao;
+	    }
 
 }
