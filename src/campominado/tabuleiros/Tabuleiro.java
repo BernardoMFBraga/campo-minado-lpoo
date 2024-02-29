@@ -248,6 +248,7 @@ public class Tabuleiro implements TabuleiroInterface {
 	    	int pontuacao = calcularPontuacao();
 	        JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(frame);
 	        FimDeJogo fimDeJogo = new FimDeJogo(parentFrame, pontuacao,this.jogador);
+	        frame.dispose(); // Fecha o JFrame do tabuleiro
 	        }
 	    public int calcularPontuacao() {
 	        int pontuacao = 0;
