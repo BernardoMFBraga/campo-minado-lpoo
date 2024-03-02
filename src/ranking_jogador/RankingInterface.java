@@ -1,6 +1,8 @@
 package ranking_jogador;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+
 import java.awt.*;
 import java.util.ArrayList;
 
@@ -21,19 +23,26 @@ public class RankingInterface extends JFrame {
         pontos = new Ranking().getPontos();
 
         labelSuperior = new JLabel("RANKING");
-        labelSuperior.setFont(new Font("Arial", Font.BOLD, 40));
+        labelSuperior.setFont(new Font("Courier New", Font.BOLD, 40));
+        labelSuperior.setBackground(Color.DARK_GRAY); 
+        labelSuperior.setForeground(Color.GREEN);
+        Border border = BorderFactory.createLineBorder(Color.BLACK, 12);
+        labelSuperior.setBorder(border);
+        labelSuperior.setOpaque(true);
         labelSuperior.setHorizontalAlignment(JLabel.CENTER);
 
         panelCentral = new JPanel(new GridLayout(nomes.size(), 2, 10, 10));
-        panelCentral.setBackground(Color.WHITE);
-
-        for (int i = 0; i < nomes.size(); i++) {
+        panelCentral.setBackground(Color.DARK_GRAY);
+        
+                for (int i = 0; i < nomes.size(); i++) {
             JLabel nomeLabel = new JLabel(nomes.get(i));
-            nomeLabel.setFont(new Font("Arial", Font.PLAIN, 20));
+            nomeLabel.setFont(new Font("Courier New", Font.BOLD, 20));
+            nomeLabel.setForeground(Color.GREEN);
             nomeLabel.setHorizontalAlignment(JLabel.LEFT);
 
             JLabel pontosLabel = new JLabel(pontos.get(i) + " pts");
-            pontosLabel.setFont(new Font("Arial", Font.PLAIN, 20));
+            pontosLabel.setFont(new Font("Courier New", Font.ITALIC, 22));
+            pontosLabel.setForeground(Color.WHITE);
             pontosLabel.setHorizontalAlignment(JLabel.RIGHT);
 
             panelCentral.add(nomeLabel);
@@ -50,5 +59,4 @@ public class RankingInterface extends JFrame {
         setLocationRelativeTo(null); // Centraliza a janela na tela
         setVisible(true);
     }
-
 }

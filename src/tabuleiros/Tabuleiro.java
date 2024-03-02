@@ -17,8 +17,8 @@ import exceptions.CelulaComBandeiraException;
 import ranking_jogador.Jogador;
 
 public class Tabuleiro implements TabuleiroInterface {
-    int linhas;
-    int colunas;
+    public int linhas;
+    public int colunas;
     int numeroBombas;
     JFrame frame;
     JButton[][] botoes;
@@ -28,6 +28,9 @@ public class Tabuleiro implements TabuleiroInterface {
     int jogadorAtual = 1;
     boolean jogoEmAndamento=true;
     private Jogador jogador;
+    private boolean modoUmJogador;
+    private int jogadorSingle;
+    private Jogador jogador2;
 
     public Tabuleiro(int dificuldade, Jogador jogador) {
         int largura;
@@ -35,7 +38,12 @@ public class Tabuleiro implements TabuleiroInterface {
         this.dificuldade = dificuldade;
         this.gameOver = false;
         this.jogador = jogador;
+        
+        //definindo o modo de jogo com um jogador
+        this.modoUmJogador = true;
+        this.jogadorAtual = 1;
 
+        // criando o tabuleiro com base na dificuldade selecionada
         switch (dificuldade) {
             case 1:
                 this.numeroBombas = 10;
@@ -66,12 +74,13 @@ public class Tabuleiro implements TabuleiroInterface {
                 break;
         }
 
-        	
+        //interface gráfica do tabuleiro
         frame = new JFrame("Campo Minado");
         frame.setVisible(true);
         frame.setSize(largura, altura);
         frame.setLayout(new GridLayout(linhas, colunas));
-
+        
+        // adiona os botões e os ouvintes de mouse para cada célula do tabuleiro
         for (int i = 0; i < botoes.length; i++) {
             for (int j = 0; j < botoes[0].length; j++) {
                 botoes[i][j] = new JButton();
@@ -141,21 +150,36 @@ public class Tabuleiro implements TabuleiroInterface {
         frame.setLocation(x, y);
     }
     
-	public Tabuleiro(int i) {
-		
+    public Tabuleiro(int dificuldade, Jogador jogador1, Jogador jogador2) {
+        // Defina o modo de jogo como dois jogadores
+        this.modoUmJogador = false;
+        
+        // Inicialize os jogadores
+        this.jogador = jogador1;
+        this.jogador2 = jogador2;
+        
+        // Defina o jogador atual como 1
+        this.jogadorSingle = 1;
+    }
+    
+	public Tabuleiro(int i, String nomeJogador1, String nomeJogador2) {
+		// TODO Auto-generated constructor stub
 	}
+
 	public void iniciaTabuleiro() {
         preencherMatriz(jogoReal, " ");
         distribuirBombas();
         System.out.println("Começa o Jogador 1");
     }
-	private void alternarJogador() {
-	    jogadorAtual = (jogadorAtual == 1) ? 2 : 1;
-	    if (jogoEmAndamento) {
-	        System.out.println("Próxima jogada: Jogador " + jogadorAtual);
-	    }
-	}
-
+	// Método para alternar entre os jogadores no modo dois jogadores
+    private void alternarJogador() {
+        if (!modoUmJogador) {
+            jogadorSingle = (jogadorSingle == 1) ? 2 : 1;
+            if (jogoEmAndamento) {
+                System.out.println("Próxima jogada: Jogador " + jogadorAtual);
+            }
+        }
+    }
     public void preencherMatriz(Celula[][] matriz, String valorPadrao) {
         for (int i = 0; i < matriz.length; i++) {
             for (int j = 0; j < matriz[0].length; j++) {
@@ -283,8 +307,14 @@ public class Tabuleiro implements TabuleiroInterface {
 	        }
 
 	        pontuacao = celulasAbertas * 10;
-
-	        return pontuacao;
+	        
+	        // Apenas retornar pontuação para o modo um jogador
+	        if (modoUmJogador) {
+	            return pontuacao;
+	        } else {
+	            // Pontuação final não é relevante para o modo dois jogadores
+	            return -1;
+	        }
 	    }
 
 }

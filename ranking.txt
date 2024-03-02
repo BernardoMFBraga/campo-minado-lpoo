@@ -1,26 +1,12 @@
+rato;1220
 Bb;1170
 bbb;990
 oi;840
 Roberto Carlos;700
+Marcos do Bundao;700
 Zé Gotinha;620
-bb;530
-Bernardo;530
-Habacuque;460
-Bernardinho;460
-Bernardo;450
-Bn;450
-Sofia;390
-Bb;340
-Raul Gil;170
-Bernalindo;60
-Jorge;50
-Cosmo;40
-Joabe Jesus;30
-Bernardinho[;20
-Bb;20
-Bernardela;10
-Bernardo;10
-Bebs;0
-Bernardo;0
-Joabe Jesus;0
-Fernando Buarque;0
+Berna;620
+Bib;590
+Binho;560
+Bertinho;550
+Amoreco;440
