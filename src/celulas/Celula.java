@@ -2,7 +2,7 @@ package celulas;
 
 import tabuleiros.Tabuleiro;
 
-public class Celula {
+public class Celula extends CelulaAbstrata {
     protected String valor; // Valor da célula ('*', '0', '#', etc.)
     protected boolean validado; // Indica se a célula foi revelada ou não
     protected boolean temBandeira;
@@ -44,10 +44,6 @@ public class Celula {
    
     // Método para ação ao abrir a célula
     public void acaoAoAbrir(Tabuleiro tabuleiro, int linha, int coluna) {
-        // Lógica padrão ao abrir uma célula
-        if (tabuleiro.jogoReal[linha][coluna] instanceof Bomba) {
-            
-            System.out.println("Você clicou em uma bomba!");
-        }
+    // sem utilidade na interface grafica
     }
 }

@@ -63,12 +63,19 @@ public class Menu {
         
         btnJogar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // Chama a classe Multiplayer
-                ModosDeJogo multiplayer = new ModosDeJogo(jogador);
+                // Caixa de diálogo para obter o nome do jogador
+                String nomeJogador = JOptionPane.showInputDialog(frame, "Digite o nome do jogador:");
+
+                // Verifica se o nome não está vazio ou nulo
+                if (nomeJogador != null && !nomeJogador.isEmpty()) {
+                    jogador = new Jogador(nomeJogador);
+                    ModosDeJogo modosdejogo = new ModosDeJogo(jogador);
+                } else {
+                    JOptionPane.showMessageDialog(frame, "Nome do jogador inválido.", "Erro", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
-        
-         panel.add(btnJogar);
+        panel.add(btnJogar);
 
       // Botão Ranking
          JButton btnRanking = new JButton("Ranking");
@@ -88,4 +95,3 @@ public class Menu {
         frame.setVisible(true);
     }
 }
-

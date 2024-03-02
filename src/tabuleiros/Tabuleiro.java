@@ -1,49 +1,43 @@
 package tabuleiros;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
-import sistema.FimDeJogo;
 import celulas.Bomba;
 import celulas.Celula;
 import exceptions.CelulaComBandeiraException;
 import ranking_jogador.Jogador;
+import sistema.FimDeJogo;
 
 public class Tabuleiro implements TabuleiroInterface {
-    public int linhas;
-    public int colunas;
-    int numeroBombas;
-    JFrame frame;
-    JButton[][] botoes;
-    public Celula[][] jogoReal;
-    int dificuldade;
-    boolean gameOver;
-    int jogadorAtual = 1;
-    boolean jogoEmAndamento=true;
+    private int linhas;
+    private int colunas;
+    private int numeroBombas;
+    private JFrame frame;
+    private JButton[][] botoes;
+    private Celula[][] jogoReal;
+    private int dificuldade;
+    private boolean gameOver;
+    private int jogadorAtual = 1;
+    private boolean jogoEmAndamento = true;
     private Jogador jogador;
-    private boolean modoUmJogador;
-    private int jogadorSingle;
-    private Jogador jogador2;
+    private boolean doisJogadores;
 
-    public Tabuleiro(int dificuldade, Jogador jogador) {
+
+    public Tabuleiro(int dificuldade, Jogador jogador, Boolean doisJogadores) {
         int largura;
         int altura;
         this.dificuldade = dificuldade;
         this.gameOver = false;
         this.jogador = jogador;
-        
-        //definindo o modo de jogo com um jogador
-        this.modoUmJogador = true;
-        this.jogadorAtual = 1;
+        this.doisJogadores = doisJogadores; 
 
-        // criando o tabuleiro com base na dificuldade selecionada
         switch (dificuldade) {
             case 1:
                 this.numeroBombas = 10;
@@ -74,13 +68,11 @@ public class Tabuleiro implements TabuleiroInterface {
                 break;
         }
 
-        //interface gráfica do tabuleiro
         frame = new JFrame("Campo Minado");
         frame.setVisible(true);
         frame.setSize(largura, altura);
         frame.setLayout(new GridLayout(linhas, colunas));
-        
-        // adiona os botões e os ouvintes de mouse para cada célula do tabuleiro
+
         for (int i = 0; i < botoes.length; i++) {
             for (int j = 0; j < botoes[0].length; j++) {
                 botoes[i][j] = new JButton();
@@ -105,11 +97,6 @@ public class Tabuleiro implements TabuleiroInterface {
                                 throw new CelulaComBandeiraException("Não é possível abrir uma célula marcada com bandeira.");
                             } else if (jogoReal[linha][coluna] instanceof Bomba) {
                                 abrirCampo();
-                                if (jogadorAtual == 1) {
-                                    System.out.println("Jogador 2 ganhou!");
-                                } else {
-                                    System.out.println("Jogador 1 ganhou!");
-                                }
                                 jogoEmAndamento = false;
                             } else {
                                 verificarBombas(linha, coluna);
@@ -135,51 +122,21 @@ public class Tabuleiro implements TabuleiroInterface {
             
         }
         iniciaTabuleiro();
-        centralizarJanela();
     }
-    
-    private void centralizarJanela() {
-        // Obtém o tamanho da tela
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-
-        // Calcula a posição para centralizar a janela
-        int x = (screenSize.width - frame.getWidth()) / 2;
-        int y = (screenSize.height - frame.getHeight()) / 2;
-
-        // Define a posição da janela
-        frame.setLocation(x, y);
-    }
-    
-    public Tabuleiro(int dificuldade, Jogador jogador1, Jogador jogador2) {
-        // Defina o modo de jogo como dois jogadores
-        this.modoUmJogador = false;
-        
-        // Inicialize os jogadores
-        this.jogador = jogador1;
-        this.jogador2 = jogador2;
-        
-        // Defina o jogador atual como 1
-        this.jogadorSingle = 1;
-    }
-    
-	public Tabuleiro(int i, String nomeJogador1, String nomeJogador2) {
-		// TODO Auto-generated constructor stub
-	}
-
 	public void iniciaTabuleiro() {
         preencherMatriz(jogoReal, " ");
         distribuirBombas();
-        System.out.println("Começa o Jogador 1");
-    }
-	// Método para alternar entre os jogadores no modo dois jogadores
-    private void alternarJogador() {
-        if (!modoUmJogador) {
-            jogadorSingle = (jogadorSingle == 1) ? 2 : 1;
-            if (jogoEmAndamento) {
-                System.out.println("Próxima jogada: Jogador " + jogadorAtual);
-            }
+        if(doisJogadores){
+        JOptionPane.showMessageDialog(frame, "Começa o Jogador 1", "Início do Jogo", JOptionPane.INFORMATION_MESSAGE);
         }
     }
+	public void alternarJogador() {
+        jogadorAtual = (jogadorAtual == 1) ? 2 : 1;
+        if (doisJogadores && jogoEmAndamento) {
+            JOptionPane.showMessageDialog(frame, "Próxima jogada: Jogador " + jogadorAtual, "Alternação de Jogadores", JOptionPane.INFORMATION_MESSAGE);
+        }
+	}
+
     public void preencherMatriz(Celula[][] matriz, String valorPadrao) {
         for (int i = 0; i < matriz.length; i++) {
             for (int j = 0; j < matriz[0].length; j++) {
@@ -274,7 +231,7 @@ public class Tabuleiro implements TabuleiroInterface {
 	            }
 	        }
 	    }
-	    private void abrirCampo() {
+	    public void abrirCampo() {
 	        gameOver = true;
 	        
 	    	for (int x = 0; x < botoes.length; x++) {
@@ -290,7 +247,15 @@ public class Tabuleiro implements TabuleiroInterface {
 	        }
 	    	int pontuacao = calcularPontuacao();
 	        JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(frame);
-	        FimDeJogo fimDeJogo = new FimDeJogo(parentFrame, pontuacao,this.jogador);
+            if(doisJogadores){
+                if (jogadorAtual == 1) {
+                    JOptionPane.showMessageDialog(frame, "Jogador 2 ganhou!", "Fim de Jogo", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(frame, "Jogador 1 ganhou!", "Fim de Jogo", JOptionPane.INFORMATION_MESSAGE);
+                }
+            }else{
+                FimDeJogo fimDeJogo = new FimDeJogo(parentFrame, pontuacao, jogador);
+            }
 	        frame.dispose(); // Fecha o JFrame do tabuleiro
 	        }
 	    public int calcularPontuacao() {
@@ -307,14 +272,8 @@ public class Tabuleiro implements TabuleiroInterface {
 	        }
 
 	        pontuacao = celulasAbertas * 10;
-	        
-	        // Apenas retornar pontuação para o modo um jogador
-	        if (modoUmJogador) {
-	            return pontuacao;
-	        } else {
-	            // Pontuação final não é relevante para o modo dois jogadores
-	            return -1;
-	        }
+
+	        return pontuacao;
 	    }
 
 }
