@@ -28,15 +28,18 @@ public class Tabuleiro implements TabuleiroInterface {
     private boolean jogoEmAndamento = true;
     private Jogador jogador;
     private boolean doisJogadores;
+    private boolean modoMaluco;
+    private double nivelMaluquice;
 
-
-    public Tabuleiro(int dificuldade, Jogador jogador, Boolean doisJogadores) {
+    public Tabuleiro(int dificuldade, Jogador jogador, Boolean doisJogadores, Boolean modoMaluco, double nivelMaluquice) {
         int largura;
         int altura;
         this.dificuldade = dificuldade;
         this.gameOver = false;
         this.jogador = jogador;
         this.doisJogadores = doisJogadores; 
+        this.modoMaluco = modoMaluco;
+        this.nivelMaluquice = (modoMaluco) ? nivelMaluquice : 0;
 
         switch (dificuldade) {
             case 1:
@@ -106,11 +109,28 @@ public class Tabuleiro implements TabuleiroInterface {
                                 // Alternar jogador somente se a célula não estiver validada
                                 alternarJogador();
                                 }
+                                imprimirTabuleiro();
                         }
                         // Verificar se foi um clique do botão direito
                         else if (SwingUtilities.isRightMouseButton(e)) {
                         	 Celula celulaAtual = jogoReal[linha][coluna];
-                             
+                              // Verificar se a célula é maluca e lidar com a mudança de estado
+                              if (celulaAtual.getMaluca()) {
+                                // Determinar se a célula muda de estado com base na probabilidade
+                                if (Math.random() < nivelMaluquice) {
+                                    // Alterar a célula para ser uma bomba ou não, conforme a probabilidade
+                                    if (celulaAtual instanceof Bomba) {
+                                        jogoReal[linha][coluna] = new Celula(); // Criar uma nova célula não-bomba na mesma posição
+                                        jogoReal[linha][coluna].setMaluca(false); // Definir como não-maluca
+                                        jogoReal[linha][coluna].setValor(" "); // Definir como não-bomba
+                                        notificarVizinhosMalucos(linha, coluna);
+                                    } else {
+                                        jogoReal[linha][coluna] = new Bomba(); // Criar uma nova bomba na mesma posição
+                                        jogoReal[linha][coluna].setMaluca(false); // Definir como não-maluca
+                                        notificarVizinhosMalucos(linha, coluna);
+                                    }
+                                }
+                            }
                              // Lógica para colocar ou remover bandeira
                              if (!celulaAtual.temBandeira()) {
                                  celulaAtual.alternarBandeira();
@@ -119,6 +139,7 @@ public class Tabuleiro implements TabuleiroInterface {
                                  celulaAtual.alternarBandeira();
                                  botoes[linha][coluna].setText("");
                              }
+                             imprimirTabuleiro();
                         }
                     }
                 });
@@ -132,6 +153,9 @@ public class Tabuleiro implements TabuleiroInterface {
         distribuirBombas();
         if(doisJogadores){
         JOptionPane.showMessageDialog(frame, "Começa o Jogador 1", "Início do Jogo", JOptionPane.INFORMATION_MESSAGE);
+        }
+        if (modoMaluco) {
+            definirCelulasMalucas();
         }
     }
 	public void alternarJogador() {
@@ -279,5 +303,53 @@ public class Tabuleiro implements TabuleiroInterface {
 
 	        return pontuacao;
 	    }
+        public void definirCelulasMalucas() {
+            for (int i = 0; i < linhas; i++) {
+                for (int j = 0; j < colunas; j++) {
+                    Celula celulaAtual = jogoReal[i][j];
+                    celulaAtual.definirMaluquice();
+                    if (celulaAtual.getMaluca()) {
+                        //botoes[i][j].setBackground(Color.YELLOW);
+                    }
+                }
+            }
+        }
+        //Metodo para eu visualizar se o modo maluco ta funcionando
+        public void imprimirTabuleiro() {
+            for (int i = 0; i < linhas; i++) {
+                for (int j = 0; j < colunas; j++) {
+                    System.out.print(jogoReal[i][j].getValor() + " ");
+                }
+                System.out.println(); // Nova linha para cada linha do tabuleiro
+            }
+        }
+        // Metodos para o modo maluco
+        private void notificarVizinhosMalucos(int linha, int coluna) {
+            for (int i = linha - 1; i <= linha + 1; i++) {
+                for (int j = coluna - 1; j <= coluna + 1; j++) {
+                    if (i >= 0 && i < linhas && j >= 0 && j < colunas && (i != linha || j != coluna)) {
+                        Celula vizinha = jogoReal[i][j];
+                        // Verifica se a célula vizinha não foi validada
+                        if (!vizinha.getValidado()) {
+                            int bombasVizinhas = contarBombasVizinhas(i, j);
+                            vizinha.setValor(String.valueOf(bombasVizinhas));
+                        }
+                    }
+                }
+            }
+        }
+        private int contarBombasVizinhas(int linha, int coluna) {
+            int bombas = 0;
+            for (int i = linha - 1; i <= linha + 1; i++) {
+                for (int j = coluna - 1; j <= coluna + 1; j++) {
+                    if (i >= 0 && i < linhas && j >= 0 && j < colunas && (i != linha || j != coluna)) {
+                        if (jogoReal[i][j] instanceof Bomba) {
+                            bombas++;
+                        }
+                    }
+                }
+            }
+            return bombas;
+        }
 
-}
+    }

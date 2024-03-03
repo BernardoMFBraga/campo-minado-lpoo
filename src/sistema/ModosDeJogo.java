@@ -2,6 +2,8 @@ package sistema;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import ranking_jogador.Jogador;
 import tabuleiros.Tabuleiro;
@@ -14,6 +16,7 @@ public class ModosDeJogo {
     private JFrame frameMultiplayer;
     private Jogador jogador;
     private boolean modoMalucoSelecionado;
+    private double nivelMaluquice;
 
     public ModosDeJogo(Jogador jogador) {
         frameMultiplayer = new JFrame();
@@ -94,6 +97,21 @@ public class ModosDeJogo {
         btnDificil.setFocusPainted(false);
         panelBotoes.add(btnDificil);
 
+        JSlider sliderNivelMaluquice = new JSlider(JSlider.HORIZONTAL, 0, 100, 50);
+        sliderNivelMaluquice.setMajorTickSpacing(10);
+        sliderNivelMaluquice.setMinorTickSpacing(1);
+        sliderNivelMaluquice.setPaintTicks(true);
+        sliderNivelMaluquice.setPaintLabels(true);
+        sliderNivelMaluquice.setForeground(Color.GREEN);
+        sliderNivelMaluquice.setBackground(Color.DARK_GRAY);
+        panelSelecaoJogador.add(sliderNivelMaluquice);
+
+        sliderNivelMaluquice.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                nivelMaluquice = sliderNivelMaluquice.getValue() / 100.0; // Convertendo para um valor entre 0 e 1
+            }
+        });
+
         btnFacil.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 iniciarTabuleiro(1, radioDoisJogadores.isSelected());
@@ -115,6 +133,7 @@ public class ModosDeJogo {
         checkModoMaluco.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 modoMalucoSelecionado = checkModoMaluco.isSelected();
+                nivelMaluquice = 0.5;
             }
         });
 
@@ -122,7 +141,7 @@ public class ModosDeJogo {
     }
 
     private void iniciarTabuleiro(int dificuldade, boolean doisJogadores) {
-        Tabuleiro tabuleiro = new Tabuleiro(dificuldade, jogador, doisJogadores);
+        Tabuleiro tabuleiro = new Tabuleiro(dificuldade, jogador, doisJogadores, modoMalucoSelecionado, nivelMaluquice);
         frameMultiplayer.dispose();
     }
 }
