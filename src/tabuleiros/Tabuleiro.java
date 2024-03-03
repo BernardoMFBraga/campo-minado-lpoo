@@ -92,16 +92,20 @@ public class Tabuleiro implements TabuleiroInterface {
 
                         // Verificar se foi um clique do botão esquerdo
                         if (SwingUtilities.isLeftMouseButton(e)) {
-                            // Verificar se há uma bandeira na célula
-                            if (jogoReal[linha][coluna].temBandeira()) {
-                                throw new CelulaComBandeiraException("Não é possível abrir uma célula marcada com bandeira.");
-                            } else if (jogoReal[linha][coluna] instanceof Bomba) {
-                                abrirCampo();
-                                jogoEmAndamento = false;
-                            } else {
-                                verificarBombas(linha, coluna);
-                            }
-                            alternarJogador();
+                             // Verificar se a célula já foi validada
+                            if (!jogoReal[linha][coluna].getValidado()) {
+                                 // Verificar se há uma bandeira na célula
+                                if (jogoReal[linha][coluna].temBandeira()) {
+                                    throw new CelulaComBandeiraException("Não é possível abrir uma célula marcada com bandeira.");
+                                } else if (jogoReal[linha][coluna] instanceof Bomba) {
+                                    abrirCampo();
+                                    jogoEmAndamento = false;
+                                } else {
+                                    verificarBombas(linha, coluna);
+                                }
+                                // Alternar jogador somente se a célula não estiver validada
+                                alternarJogador();
+                                }
                         }
                         // Verificar se foi um clique do botão direito
                         else if (SwingUtilities.isRightMouseButton(e)) {

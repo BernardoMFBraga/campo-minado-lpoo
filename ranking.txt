@@ -1,0 +1,3 @@
+oi;700
+ooooooo;500
+julia;60
