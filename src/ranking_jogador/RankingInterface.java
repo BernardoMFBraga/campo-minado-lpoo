@@ -15,9 +15,9 @@ public class RankingInterface extends JFrame {
 
     public RankingInterface() {
         setTitle("Ranking");
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);// Fecha apenas a janela, não a aplicação inteira
         setPreferredSize(new Dimension(420, 600));
-        setResizable(false);
+        setResizable(false); // Impede o redimensionamento da janela
 
         nomes = new Ranking().getNomes();
         pontos = new Ranking().getPontos();
@@ -36,12 +36,12 @@ public class RankingInterface extends JFrame {
         
                 for (int i = 0; i < nomes.size(); i++) {
             JLabel nomeLabel = new JLabel(nomes.get(i));
-            nomeLabel.setFont(new Font("Courier New", Font.BOLD, 20));
+            nomeLabel.setFont(new Font("Courier New", Font.BOLD, 25));
             nomeLabel.setForeground(Color.GREEN);
             nomeLabel.setHorizontalAlignment(JLabel.LEFT);
 
             JLabel pontosLabel = new JLabel(pontos.get(i) + " pts");
-            pontosLabel.setFont(new Font("Courier New", Font.ITALIC, 22));
+            pontosLabel.setFont(new Font("Courier New", Font.ITALIC, 25));
             pontosLabel.setForeground(Color.WHITE);
             pontosLabel.setHorizontalAlignment(JLabel.RIGHT);
 
@@ -55,7 +55,7 @@ public class RankingInterface extends JFrame {
         getContentPane().add(labelSuperior, BorderLayout.NORTH);
         getContentPane().add(scrollPane, BorderLayout.CENTER);
 
-        pack();
+        pack(); // Ajusta o tamanho da janela para que todos os componentes sejam exibidos adequadamente
         setLocationRelativeTo(null); // Centraliza a janela na tela
         setVisible(true);
     }

@@ -8,6 +8,6 @@ public class VizinhoBomba extends Celula {
     }
     @Override
     public void acaoAoAbrir(Tabuleiro tabuleiro, int linha, int coluna) {
-        System.out.println("Célula vizinha à bomba aberta!"); //nao esta sendo implementado
+        System.out.println("Célula vizinha à bomba aberta!"); 
     }
 }

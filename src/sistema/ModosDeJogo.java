@@ -43,26 +43,26 @@ public class ModosDeJogo {
         lblJogar.setHorizontalAlignment(SwingConstants.CENTER);
         frameMultiplayer.getContentPane().add(lblJogar, BorderLayout.NORTH);
 
-        JPanel panelSelecaoJogador = new JPanel();
+        JPanel panelSelecaoJogador = new JPanel(new GridLayout(0, 1, 0, 10)); // Ajuste do layout
         frameMultiplayer.getContentPane().add(panelSelecaoJogador, BorderLayout.CENTER);
-        panelSelecaoJogador.setLayout(new GridLayout(5, 1, 0, 20)); 
+        panelSelecaoJogador.setLayout(new GridLayout(4, 1, 0, 0)); 
 
         JRadioButton radioUmJogador = new JRadioButton("Um Jogador", true);
-        radioUmJogador.setFont(new Font("Courier New", Font.ITALIC, 30));
+        radioUmJogador.setFont(new Font("Courier New", Font.ITALIC, 35));
         radioUmJogador.setForeground(Color.GREEN);
         radioUmJogador.setBackground(Color.DARK_GRAY);
         radioUmJogador.setFocusPainted(false);
         panelSelecaoJogador.add(radioUmJogador);
 
         JRadioButton radioDoisJogadores = new JRadioButton("Dois Jogadores");
-        radioDoisJogadores.setFont(new Font("Courier New", Font.ITALIC, 30));
+        radioDoisJogadores.setFont(new Font("Courier New", Font.ITALIC, 35));
         radioDoisJogadores.setForeground(Color.GREEN);
         radioDoisJogadores.setBackground(Color.DARK_GRAY);
         radioDoisJogadores.setFocusPainted(false);
         panelSelecaoJogador.add(radioDoisJogadores);
 
         JCheckBox checkModoMaluco = new JCheckBox("Modo Maluco");
-        checkModoMaluco.setFont(new Font("Courier New", Font.ITALIC, 30));
+        checkModoMaluco.setFont(new Font("Courier New", Font.ITALIC, 35));
         checkModoMaluco.setForeground(Color.GREEN);
         checkModoMaluco.setBackground(Color.DARK_GRAY);
         checkModoMaluco.setFocusPainted(false);
@@ -73,7 +73,6 @@ public class ModosDeJogo {
         group.add(radioDoisJogadores);
 
         JPanel panelBotoes = new JPanel(new GridLayout(1, 3));
-        panelBotoes.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
         frameMultiplayer.getContentPane().add(panelBotoes, BorderLayout.SOUTH);
 
         JButton btnFacil = new JButton("Fácil");
@@ -82,12 +81,14 @@ public class ModosDeJogo {
         btnFacil.setBackground(Color.DARK_GRAY);
         btnFacil.setFocusPainted(false);
         panelBotoes.add(btnFacil);
+        btnFacil.setPreferredSize(new Dimension(200, 100));
 
         JButton btnMedio = new JButton("Médio");
         btnMedio.setFont(new Font("Courier New", Font.ITALIC, 30));
         btnMedio.setForeground(Color.GREEN);
         btnMedio.setBackground(Color.DARK_GRAY);
         btnMedio.setFocusPainted(false);
+        btnMedio.setPreferredSize(new Dimension(200, 100));
         panelBotoes.add(btnMedio);
 
         JButton btnDificil = new JButton("Difícil");
@@ -96,6 +97,7 @@ public class ModosDeJogo {
         btnDificil.setBackground(Color.DARK_GRAY);
         btnDificil.setFocusPainted(false);
         panelBotoes.add(btnDificil);
+        btnDificil.setPreferredSize(new Dimension(200, 100));
 
         JSlider sliderNivelMaluquice = new JSlider(JSlider.HORIZONTAL, 0, 100, 50);
         sliderNivelMaluquice.setMajorTickSpacing(10);
@@ -104,6 +106,7 @@ public class ModosDeJogo {
         sliderNivelMaluquice.setPaintLabels(true);
         sliderNivelMaluquice.setForeground(Color.GREEN);
         sliderNivelMaluquice.setBackground(Color.DARK_GRAY);
+        sliderNivelMaluquice.setPreferredSize(new Dimension(600, 100));
         panelSelecaoJogador.add(sliderNivelMaluquice);
 
         sliderNivelMaluquice.addChangeListener(new ChangeListener() {
@@ -133,13 +136,13 @@ public class ModosDeJogo {
         checkModoMaluco.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 modoMalucoSelecionado = checkModoMaluco.isSelected();
-                nivelMaluquice = 0.5;
             }
         });
 
         frameMultiplayer.setVisible(true);
     }
-
+    
+    //construtor
     private void iniciarTabuleiro(int dificuldade, boolean doisJogadores) {
         Tabuleiro tabuleiro = new Tabuleiro(dificuldade, jogador, doisJogadores, modoMalucoSelecionado, nivelMaluquice);
         frameMultiplayer.dispose();

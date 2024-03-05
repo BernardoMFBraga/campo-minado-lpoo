@@ -14,7 +14,7 @@ public class FimDeJogo extends JDialog {
     private Jogador jogador;
 
     public FimDeJogo(JFrame parent, int pontuacao, Jogador jogador) {
-        super(parent, "Fim de Jogo", true);
+        super(parent, "Fim de Jogo", true); // Configurações do diálogo
         setLayout(new BorderLayout());
         this.pontuacao = pontuacao;
         this.jogador = jogador;
@@ -44,7 +44,7 @@ public class FimDeJogo extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 dispose(); // Fecha a janela de diálogo
                 jogador.setPontuacao(pontuacao);
-                Ranking ranking = new Ranking(jogador); 
+                Ranking ranking = new Ranking(jogador); // Atualiza o ranking com o jogador atual 
             }
         });
         

@@ -51,7 +51,7 @@ public class Menu {
         // Painel para os botões
         JPanel panel = new JPanel();
         frame.getContentPane().add(panel, BorderLayout.CENTER);
-        panel.setLayout(new GridLayout(2, 1, 0, 0)); // 2 linhas, 1 coluna, espaçamento
+        panel.setLayout(new GridLayout(2, 1, 0, 0)); // 2 linhas, 1 coluna, espaçamento 0
 
         // Botão Jogar
         JButton btnJogar = new JButton("Jogar");
